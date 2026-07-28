@@ -5,10 +5,6 @@ export default defineConfig({
     // Pasta onde ficam todos os arquivos de teste
     testDir: './tests',
 
-    // Executa antes de todos os testes.
-    // Neste projeto, garante que existe um auth.json válido.
-    globalSetup: './config/global.setup.ts',
-
     // Tempo máximo de execução de cada teste, em milissegundos
     timeout: 30000,
 
@@ -27,8 +23,8 @@ export default defineConfig({
 
     // Gera relatório visual HTML e resultado estruturado em JSON
     reporter: [
-        ['html'],
-        ['json', { outputFile: 'test-results/results.json' }]
+        ['html']
+        // ,['json', { outputFile: 'test-results/results.json' }]
     ],
 
     // Configurações aplicadas a todos os testes
@@ -38,9 +34,6 @@ export default defineConfig({
 
         // Define se o navegador será visível durante a execução
         headless: ENV.HEADLESS,
-
-        // Carrega a sessão autenticada gerada pelo AuthService
-        storageState: ENV.AUTH_FILE,
 
         // Mantém trace somente quando ocorrer falha
         trace: 'retain-on-failure',

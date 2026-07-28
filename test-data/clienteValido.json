@@ -1,0 +1,38 @@
+{
+    "clienteValido": {
+        "RAZAO": "EMPRESA TESTE LTDA" ,
+        "FANTASIA": "EMPRESA TESTE",
+        "CATEGORIA": "15" ,
+        "ORIGEM":"11",
+        "CNPJ":"32.368.696/0001-08",
+        "IE":"926.439.328.266"
+    },
+    "ENDERECO":{
+        "PAIS":"1058",
+        "CEP":"14820-792",
+        "ENDERECO":"AV DUQUE DE CAXIAS",
+        "NUMERO":"999",
+        "COMPLEMENTO":"TESTE",
+        "BAIRRO":"VILA XAVIER",
+        "CIDADE":"ARARAQUARA",
+        "UF":"SP",
+        "IBGE": "3503208"
+
+    },
+    "CONTATO":{
+        "NOME": "CONTATO TESTE",
+        "DEPARTAMENTO": "3",
+        "TIPO": "1",
+        "RANAL": "55",
+        "FONE1": "99999-9999",
+        "FONE2": "88888-8888",
+        "CELULAR": "88888-8888",
+        "EMAIL": "teste@teste.com.br",
+        "WHATSAPP": "88888-8888"
+    },
+    "OCORRENCIAS":{
+        "OCORRENCIA": "3",
+        "MOTIVO": "3",
+        "OBS": "TESTE CAMPO OBSERVAÇÃO "
+    }
+}
