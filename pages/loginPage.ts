@@ -13,6 +13,11 @@ export class LoginPage {
     readonly btnEntrar: Locator 
     readonly btnConfirmar: Locator
     
+    // Genérico
+    readonly messageAlert: Locator
+    readonly rememberMe: Locator
+    
+    
 
     constructor(page: Page) {
         this.page = page
@@ -24,19 +29,24 @@ export class LoginPage {
         // Buttons
         this.btnEntrar = page.locator('button', {hasText:'Entrar'})
         this.btnConfirmar = page.locator('button', {hasText:'Confirmar'})
+        
+        // Genérico
+        this.messageAlert = page.locator('div.p-message-text')
+        this.rememberMe = page.locator('#rememberMe')
+
     }
 
     async goto() {
         await this.page.goto(ENV.BASE_URL)
     }
 
-    async preencherUsuario(): Promise<void> {
-        await this.inputUsuario.fill(ENV.USER)
+    async preencherUsuario(Usuario:string): Promise<void> {
+        await this.inputUsuario.fill(Usuario)
 
     }
 
-    async preencherSenha(): Promise<void> {
-        await this.inputSenha.fill(ENV.PASSWORD)
+    async preencherSenha(Password:string): Promise<void> {
+        await this.inputSenha.fill(Password)
     }
 
     async selecionarFilial(): Promise<void> {
@@ -58,8 +68,8 @@ export class LoginPage {
 
     async login(): Promise<void> {
         await this.goto()
-        await this.preencherUsuario()
-        await this.preencherSenha()
+        await this.preencherUsuario(ENV.USER)
+        await this.preencherSenha(ENV.PASSWORD)
         await this.entrar()
         await this.selecionarFilial()
         await this.confirmar()

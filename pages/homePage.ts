@@ -20,6 +20,7 @@ export class HomePage {
     
     // Menu superior
     readonly menuSuperior: Locator
+    readonly menuUser: Locator
     readonly menuConfiguracoes: Locator
     readonly menuDiagnostico: Locator
     readonly menuTrocarFilial: Locator
@@ -49,10 +50,11 @@ export class HomePage {
         
         // Menu superior
         this.menuSuperior = page.locator('button.app-logged-user')
+        this.menuUser = page.locator('span.app-logged-user-name')
         this.menuConfiguracoes = page.locator('a.p-menu-item-link',{hasText:'Configurações'})
-        this.menuDiagnostico = page.locator('a.p-menu-item-link',{hasText:'Configurações'})
-        this.menuTrocarFilial = page.locator('a.p-menu-item-link',{hasText:'Diagnóstico'})
-        this.menuSobre = page.locator('a.p-menu-item-link',{hasText:'Trocar Filial'})
+        this.menuDiagnostico = page.locator('a.p-menu-item-link',{hasText:'Diagnóstico'})
+        this.menuTrocarFilial = page.locator('a.p-menu-item-link',{hasText:'Trocar Filial'})
+        this.menuSobre = page.locator('a.p-menu-item-link',{hasText:'Sobre o Sistema'})
         this.menuDark = page.locator('input.p-toggleswitch-input')
         this.menuSair = page.locator('a.p-menu-item-link',{hasText:'Sair'})
         
