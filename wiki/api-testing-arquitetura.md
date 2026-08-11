@@ -3,6 +3,12 @@
 > Registro de decisão (ADR) para consulta futura. Cobre a camada de API criada
 > para gerar massa de dados de apoio aos testes de UI (setup) e removê-la
 > depois (teardown). Escrito em 2026-08-03, escopo inicial: Clientes.
+>
+> **Atualização (2026-08-11)**: escopo expandido para Negativas, já
+> funcional de ponta a ponta (endpoints confirmados, não é mais placeholder).
+> A seção 8 documenta as decisões novas — método de API dentro do próprio
+> Page Object (padrão POM) e autenticação self-contained via
+> `api/apiContext.ts`.
 
 ## 1. Problema que motivou isso
 
@@ -110,11 +116,18 @@ que já usava.
 |---|---|
 | `api/authClient.ts` | Login REST + seleção de filial → retorna headers de autenticação |
 | `api/graphqlClient.ts` | POST genérico para GraphQL, tratamento de `errors` |
-| `api/queries/cliente.ts` | Mutations/queries e tipos específicos de Cliente |
+| `api/apiContext.ts` | Autentica uma vez por worker e cacheia — usado pelos métodos de API dos Page Objects (ver seção 8) |
+| `api/queries/cliente.ts` | Mutations/queries e tipos específicos de Cliente (placeholders, `// TODO`) |
+| `api/queries/negativa.ts` | Mutations/queries e tipos específicos de Negativa (confirmados contra o servidor real) |
 | `test-data/clienteFactory.ts` | Gera payload de cliente único por chamada |
-| `fixtures/api.fixture.ts` | `apiAuthHeaders` (sessão por worker) + `clienteSeed` (setup/teardown automático) + `mergeTests` com `home.fixture` |
+| `test-data/negativaFactory.ts` | Gera payload de negativa único por chamada |
+| `pages/negativasPage.ts` | Page Object de Negativas — locators de UI **e** métodos de API (`createNegativa`/`buscarNegativaPorObservacao`/`deleteNegativa`/`deleteNegativaPorObservacao`) |
+| `fixtures/api.fixture.ts` | `apiAuthHeaders` (sessão por worker) + `clienteSeed`/`negativaSeed` (setup/teardown automático) + `mergeTests` com `home.fixture` |
 
 ## 5. Como usar num spec
+
+Via fixture (setup/teardown automático — preferível quando o teste só
+precisa que o registro exista, sem controlar o momento da criação/exclusão):
 
 ```ts
 import { test, expect } from '../fixtures/api.fixture'
@@ -123,28 +136,52 @@ test('Deve exibir cliente criado via API na grid', async ({ page, homePage, clie
     // clienteSeed já é o cliente criado via GraphQL antes do teste começar
     // (e será excluído automaticamente depois, mesmo se o teste falhar)
 })
+
+test('Deve localizar negativa criada via API na pesquisa geral', async ({ page, negativaSeed }) => {
+    // negativaSeed idem, via Negativas.createNegativa()/deleteNegativa() (ver seção 8)
+})
+```
+
+Chamando os métodos do Page Object diretamente (quando o teste precisa
+controlar o momento exato do create/delete):
+
+```ts
+import { test, expect } from '../fixtures/api.fixture'
+import { Negativas } from '../pages/negativasPage'
+
+test('...', async ({ page }) => {
+    const negativas = new Negativas(page)
+
+    const negativa = await negativas.createNegativa()
+    // ...
+    await negativas.deleteNegativa(negativa.id)
+})
 ```
 
 ## 6. O que ainda falta (bloqueia execução real, não a arquitetura)
 
-Os paths e formatos abaixo são placeholders marcados com `TODO` no código —
-precisam ser capturados via aba de rede do navegador (DevTools/HAR) durante
-um login e uma criação de cliente reais, feitos manualmente:
+Os itens 1 e 2 já foram resolvidos (compartilhados por qualquer entidade,
+confirmados enquanto implementava Negativas — ver seção 8). O que falta hoje
+é específico de Clientes:
 
-1. Path e payload exatos do login REST e da seleção de filial
-   (`api/authClient.ts`, hoje `/auth/login` e `/auth/filial` são só chutes).
-2. Path do endpoint GraphQL e formato exato do header de autorização esperado
-   (`api/graphqlClient.ts`, hoje `/graphql`).
+1. ~~Path e payload exatos do login REST e da seleção de filial~~ — resolvido
+   em `api/authClient.ts`.
+2. ~~Path do endpoint GraphQL e formato exato do header de autorização
+   esperado~~ — resolvido em `api/graphqlClient.ts`.
 3. Nome e shape reais da mutation de criar/excluir cliente — os nomes de
-   campos em `api/queries/cliente.ts` podem não bater com o schema real.
+   campos em `api/queries/cliente.ts` **ainda são placeholders** (`// TODO`),
+   podem não bater com o schema real.
 
-Depois de capturado, a ordem de verificação recomendada:
-1. Teste isolado só com a fixture nativa `request` do Playwright: login REST
-   → seleciona filial → uma query GraphQL simples, conferindo 200 e o payload
-   esperado — antes de mexer nos fixtures.
+Ordem de verificação recomendada pra fechar o item 3 (mesma que validou
+Negativas — ver seção 8):
+1. Teste isolado só com a fixture nativa `request` do Playwright: uma
+   mutation de criação simples, conferindo 200 e o payload esperado — antes
+   de mexer nos fixtures.
 2. Testar `clienteSeed` isoladamente (confirmar que o cliente existe logo
    após o setup e não existe mais logo após o teardown).
-3. Só então integrar num spec de UI real.
+3. Só então integrar num spec de UI real, seguindo o padrão de
+   `pages/negativasPage.ts` (métodos de API no próprio Page Object, não
+   soltos no spec).
 
 ## 7. Alternativas consideradas e descartadas
 
@@ -160,3 +197,71 @@ Depois de capturado, a ordem de verificação recomendada:
   (fixtures, client genérico, convenção de teardown) e deixar a descoberta
   dos endpoints reais como próximo passo separado, já que uma coisa não
   bloqueia a outra.
+
+## 8. Evolução: Negativas — métodos de API no Page Object (2026-08-11)
+
+Com Negativas confirmada e funcional (mutations/queries reais em
+`api/queries/negativa.ts`), duas decisões novas além das da seção 3:
+
+### 8.1 A lógica de API mora no Page Object, não no spec
+Antes, um teste que precisava criar+excluir uma Negativa via API (fora do
+fluxo automático do `negativaSeed`) reimplementava isso na mão dentro do
+`test(...)` — busca por observação, `if` checando se achou, `try/catch` no
+delete. Isso duplicava a mesma lógica em vários specs e, quando a
+mutation/schema mudasse, seria preciso caçar cada ocorrência.
+
+Decisão: `pages/negativasPage.ts` ganhou métodos de API na própria classe
+`Negativas` — `createNegativa`, `buscarNegativaPorObservacao`,
+`deleteNegativa`, `deleteNegativaPorObservacao`. O spec só chama o método:
+
+```ts
+const negativas = new Negativas(page)
+
+const negativa = await negativas.createNegativa()
+// ...usa a negativa no teste...
+await negativas.deleteNegativa(negativa.id)
+
+// ou, quando a negativa foi criada pela UI (sem id conhecido):
+await negativas.deleteNegativaPorObservacao(obs)
+```
+
+Isso segue o mesmo espírito da seção 3.4 (teardown não deve ser lógica solta
+manual) — só que agora aplicado também a chamadas feitas *dentro* do corpo
+do teste, não só no teardown de fixture. Padrão a repetir em qualquer Page
+Object novo que precise de API (`clientePage.ts`, `pedidoPage.ts`).
+
+### 8.2 Autenticação self-contained (`api/apiContext.ts`)
+Primeira versão desses métodos exigia passar `request`/`apiAuthHeaders` a
+cada chamada (ou no construtor do Page Object) — fácil de esquecer e gerar
+erro em runtime só percebido ao rodar o teste. `api/apiContext.ts` resolve
+isso: autentica uma vez por processo de worker e cacheia o resultado (mesma
+ideia da fixture `apiAuthHeaders`, seção 3.5, só que como uma função pura,
+acessível de dentro de um Page Object sem depender do ciclo de fixtures do
+Playwright).
+
+```ts
+// dentro de um método de API do Page Object:
+const { request, headers } = await getApiContext()
+await graphqlRequest(request, headers, MinhaQuery.CREATE, { ... })
+```
+
+Resultado: `new Negativas(page)` sempre funciona, com ou sem métodos de API
+em uso — quem escreve o teste não precisa saber que por trás existe
+autenticação acontecendo.
+
+### 8.3 Nomes de mutation/query curtos, namespaced pelo próprio arquivo
+`api/queries/negativa.ts` exporta `CREATE`/`FIND`/`DELETE` (não
+`CREATE_NEGATIVA_MUTATION` etc.) — o prefixo da entidade já vem do nome do
+arquivo/módulo. Quem consome importa como namespace, mantendo a origem
+legível no ponto de uso sem repetir o nome da entidade duas vezes:
+
+```ts
+import * as NegativaQueries from '../api/queries/negativa'
+// uso: NegativaQueries.CREATE, NegativaQueries.FIND, NegativaQueries.DELETE
+```
+
+Tipos exportados (`NegativaPayload`, `NegativaCriada`) continuam com o
+prefixo da entidade, porque esses cruzam para outros arquivos que também
+importam os equivalentes de outras entidades no mesmo lugar (ex.:
+`fixtures/api.fixture.ts` importa `NegativaCriada` e `ClienteCriado` juntos)
+— aí um nome genérico colidiria ou ficaria ambíguo.

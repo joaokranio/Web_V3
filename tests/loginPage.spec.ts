@@ -9,7 +9,7 @@ test.beforeEach(async ({ page }) => {
     await login.goto()
 })
 
-test('Deve permitir login com credenciais válidas', { tag: ['@critical', '@smoke'] }, async ({ page }) => {
+test('Deve permitir login com credenciais válidas', { tag: ['@critical', '@smoke', '@login'] }, async ({ page }) => {
     const login = new LoginPage(page)
     const home = new HomePage(page)
 
@@ -30,7 +30,7 @@ test('Deve permitir login com credenciais válidas', { tag: ['@critical', '@smok
 
 })
 
-test('Não deve permitir login com usuário inválido', { tag: ['@critical', '@smoke'] }, async ({ page }) => {
+test('Não deve permitir login com usuário inválido', { tag: ['@critical', '@smoke', '@login'] }, async ({ page }) => {
     const login = new LoginPage(page)
     const toast = new Toast(page)
     const message = 'Usuário ou senha inválido.'
@@ -47,7 +47,7 @@ test('Não deve permitir login com usuário inválido', { tag: ['@critical', '@s
 
 })
 
-test('Deve exibir toast ao falhar login', { tag: ['@smoke'] }, async ({ page }) => {
+test('Deve exibir toast ao falhar login', { tag: ['@smoke', '@login'] }, async ({ page }) => {
     const login = new LoginPage(page)
     const toast = new Toast(page)
     const message = 'Usuário ou senha inválido.'
@@ -64,7 +64,7 @@ test('Deve exibir toast ao falhar login', { tag: ['@smoke'] }, async ({ page }) 
 
 })
 
-test('Validar campos obrigatórios', { tag: ['@smoke'] }, async ({ page }) => {
+test('Validar campos obrigatórios', { tag: ['@smoke', '@login'] }, async ({ page }) => {
     const login = new LoginPage(page)
     
     // Dado que eu não preencho os campos na área de login.
@@ -81,7 +81,7 @@ test('Validar campos obrigatórios', { tag: ['@smoke'] }, async ({ page }) => {
     
 })
 
-test('Manter o usuário preenchido após selecionar "Lembrar meus dados"', { tag: ['@smoke'] }, async ({ page }) => {
+test('Manter o usuário preenchido após selecionar "Lembrar meus dados"', { tag: ['@smoke', '@login'] }, async ({ page }) => {
     const login = new LoginPage(page)
     const home = new HomePage(page)
     
@@ -110,7 +110,7 @@ test('Manter o usuário preenchido após selecionar "Lembrar meus dados"', { tag
 
 })
 
-test('Validar mensagem de quantidade de digitação máxima de caracteres',{tag:['@smoke']}, async ({page})=>{
+test('Validar mensagem de quantidade de digitação máxima de caracteres',{ tag: ['@smoke', '@login'] }, async ({page})=>{
     const login = new LoginPage(page)
     const message = 'O campo não pode exceder 20 caracteres.'
 
@@ -125,7 +125,7 @@ test('Validar mensagem de quantidade de digitação máxima de caracteres',{tag:
 
 })
 
-test('Validar a funcionalidade do botão exibir senha',{tag:['@smoke']}, async ({page})=>{
+test('Validar a funcionalidade do botão exibir senha',{ tag: ['@smoke', '@login'] }, async ({page})=>{
     const login = new LoginPage(page)
 
     // Dado que preenchi o campo senha e a mesma é apresentado oculta
