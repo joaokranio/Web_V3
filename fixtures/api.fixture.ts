@@ -6,6 +6,7 @@ import { CREATE_CLIENTE_MUTATION, DELETE_CLIENTE_MUTATION, ClienteCriado } from 
 import { buildClientePayload } from '../test-data/clienteFactory'
 import { NegativaCriada } from '../api/queries/negativa'
 import { Negativas } from '../pages/negativasPage'
+import { negativaPayloads } from '../test-data/negativaFactory'
 
 type ApiWorkerFixtures = {
     apiAuthHeaders: AuthHeaders
@@ -13,6 +14,7 @@ type ApiWorkerFixtures = {
 
 type ApiTestFixtures = {
     clienteSeed: ClienteCriado
+    negativaSeedPreset: keyof typeof negativaPayloads
     negativaSeed: NegativaCriada
 }
 
@@ -56,6 +58,17 @@ const apiTest = base.extend<ApiTestFixtures, ApiWorkerFixtures>({
         }
     },
 
+    // Opção: qual payload nomeado (test-data/negativaFactory.ts) o
+    // negativaSeed deve usar. Default = 'generico' (payload sem overrides).
+    // Specs que precisam de um payload específico (ex.: observação
+    // identificável pra pesquisa) sobrescrevem com
+    // test.use({ negativaSeedPreset: 'paraExclusao' }).
+    // Guarda o NOME (string), não a função geradora — o Playwright trata um
+    // valor de fixture-opção que seja uma função como se fosse a própria
+    // função de setup da fixture (2 parâmetros + use()), então uma função
+    // solta aqui quebra com "use() was not called".
+    negativaSeedPreset: ['generico', { option: true }],
+
     // Cria uma negativa via GraphQL antes do teste e exclui depois. Usado por
     // testes cujo foco não é o cadastro em si (ex.: exclusão, edição) —
     // criar via API é mais rápido do que passar pelo formulário na UI.
@@ -63,10 +76,13 @@ const apiTest = base.extend<ApiTestFixtures, ApiWorkerFixtures>({
     // exclusão), a tentativa de excluir de novo aqui simplesmente falha e só
     // gera um aviso, sem mascarar o resultado do teste.
     // Create/delete ficam centralizados em Negativas (pages/negativasPage.ts)
-    // — único lugar a manter se a mutation/schema mudar.
-    negativaSeed: async ({ page }, use) => {
+    // — único lugar a manter se a mutation/schema mudar. "testInfo" (3º
+    // parâmetro, fornecido pelo próprio Playwright) embute o nome do teste
+    // atual na observação gerada — ver test-data/negativaFactory.ts.
+    negativaSeed: async ({ page, negativaSeedPreset }, use, testInfo) => {
         const negativas = new Negativas(page)
-        const negativa = await negativas.createNegativa()
+        const overrides = negativaPayloads[negativaSeedPreset](testInfo)
+        const negativa = await negativas.createNegativa(overrides)
 
         await use(negativa)
 
