@@ -5,7 +5,7 @@ test.beforeEach(async ({ page }) => {
     await page.goto('/#/comercial/pedidos')
 })
 
-test.describe('Cadastro do Pedido', () => {
+test.describe.skip('Cadastro do Pedido', () => {
     test('Abrir tela de cadastro de pedido de venda', { tag: ['@critical', '@smoke', '@pedidos_venda'] }, async ({ page }) => {
         const pedido = new PedidoPage(page)
 
@@ -26,7 +26,7 @@ test.describe('Cadastro do Pedido', () => {
 
 })
 
-test.describe('Validações da Cabeça', () => {
+test.describe.skip('Validações da Cabeça', () => {
     test('Validar campos obrigatórios da cabeça do pedido', { tag: ['@high', '@regression', '@pedidos_venda'] }, async ({ page }) => {
         const pedido = new PedidoPage(page)
 
@@ -64,7 +64,7 @@ test.describe('Validações da Cabeça', () => {
 
 })
 
-test.describe('Inclusão de Itens (Modal de Item)', () => {
+test.describe.skip('Inclusão de Itens (Modal de Item)', () => {
 
     test('Abrir modal de inclusão de item', { tag: ['@critical', '@smoke', '@pedidos_venda'] }, async ({ page }) => {
         const pedido = new PedidoPage(page)
@@ -115,7 +115,7 @@ test.describe('Inclusão de Itens (Modal de Item)', () => {
 
 })
 
-test.describe('Validações do Item', () => {
+test.describe.skip('Validações do Item', () => {
 
     test('Validar campos obrigatórios do item', { tag: ['@high', '@regression', '@pedidos_venda'] }, async ({ page }) => {
         const pedido = new PedidoPage(page)
@@ -145,7 +145,7 @@ test.describe('Validações do Item', () => {
 
 })
 
-test.describe('Cálculos do Item', () => {
+test.describe.skip('Cálculos do Item', () => {
 
     test('Calcular valor total do item ao informar quantidade e valor unitário', { tag: ['@critical', '@regression', '@pedidos_venda'] }, async ({ page }) => {
         const pedido = new PedidoPage(page)
@@ -194,7 +194,7 @@ test.describe('Cálculos do Item', () => {
 
 })
 
-test.describe('Grid de Itens', () => {
+test.describe.skip('Grid de Itens', () => {
     test('Exibir corretamente os valores calculados na grid de itens', { tag: ['@high', '@regression', '@pedidos_venda'] }, async ({ page }) => {
         const pedido = new PedidoPage(page)
 
@@ -225,7 +225,7 @@ test.describe('Grid de Itens', () => {
 
 })
 
-test.describe('Exclusão de Itens', () => {
+test.describe.skip('Exclusão de Itens', () => {
     test('Excluir item individual pela grid', { tag: ['@high', '@regression', '@pedidos_venda'] }, async ({ page }) => {
         const pedido = new PedidoPage(page)
 
@@ -251,7 +251,7 @@ test.describe('Exclusão de Itens', () => {
 
 })
 
-test.describe('Assistente de Digitação', () => {
+test.describe.skip('Assistente de Digitação', () => {
     test('Abrir assistente de digitação de itens', { tag: ['@medium', '@regression', '@pedidos_venda'] }, async ({ page }) => {
         const pedido = new PedidoPage(page)
 

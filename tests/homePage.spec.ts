@@ -2,7 +2,7 @@ import { test, expect } from '../fixtures/home.fixture'
 import { LoginPage } from '../pages/loginPage'
 import { HomePage } from '../pages/homePage'
 
-test('Abrir menu "Clientes"', async ({ page }) => {
+test('Abrir menu "Clientes"', { tag: ['@home'] }, async ({ page }) => {
     const home = new HomePage(page)
 
     // Dado que estou na homepage
@@ -17,7 +17,7 @@ test('Abrir menu "Clientes"', async ({ page }) => {
     
 })
 
-test('Abrir menu "Pedidos de Venda"', async ({ page }) => {
+test('Abrir menu "Pedidos de Venda"', { tag: ['@home'] }, async ({ page }) => {
     const home = new HomePage(page)
     
     // Dado que estou na homepage
@@ -32,7 +32,7 @@ test('Abrir menu "Pedidos de Venda"', async ({ page }) => {
     
 })
 
-test('Abrir menu "Negativas"', async ({ page }) => {
+test('Abrir menu "Negativas"', { tag: ['@home'] }, async ({ page }) => {
     const home = new HomePage(page)
     
     // Dado que estou na homepage
@@ -47,7 +47,7 @@ test('Abrir menu "Negativas"', async ({ page }) => {
     
 })
 
-test('Abrir menu "Pedidos de Compra"', async ({ page }) => {
+test('Abrir menu "Pedidos de Compra"', { tag: ['@home'] }, async ({ page }) => {
     const home = new HomePage(page)
     
     // Dado que estou na homepage
@@ -62,7 +62,7 @@ test('Abrir menu "Pedidos de Compra"', async ({ page }) => {
     
 })
 
-test('Abrir menu "Lista de Materiais"', async ({ page }) => {
+test('Abrir menu "Lista de Materiais"', { tag: ['@home'] }, async ({ page }) => {
     const home = new HomePage(page)
     
     // Dado que estou na homepage
@@ -77,7 +77,7 @@ test('Abrir menu "Lista de Materiais"', async ({ page }) => {
     
 })
 
-test('Abrir menu "Indicadores"', async ({ page }) => {
+test('Abrir menu "Indicadores"', { tag: ['@home'] }, async ({ page }) => {
     const home = new HomePage(page)
     
     // Dado que estou na homepage
@@ -91,7 +91,7 @@ test('Abrir menu "Indicadores"', async ({ page }) => {
     
 })
 
-test('Abrir menu "Configurações"', async ({ page }) => {
+test('Abrir menu "Configurações"', { tag: ['@home'] }, async ({ page }) => {
     const home = new HomePage(page)
     
     // Dado que estou na homepage
@@ -106,7 +106,7 @@ test('Abrir menu "Configurações"', async ({ page }) => {
     
 })
 
-test('Abrir menu "Diagnostico"', async ({ page }) => {
+test('Abrir menu "Diagnostico"', { tag: ['@home'] }, async ({ page }) => {
     const home = new HomePage(page)
     
     // Dado que estou na homepage
@@ -121,7 +121,7 @@ test('Abrir menu "Diagnostico"', async ({ page }) => {
     
 })
 
-test('Abrir menu "Trocar Filial"', async ({ page }) => {
+test('Abrir menu "Trocar Filial"', { tag: ['@home'] }, async ({ page }) => {
     const home = new HomePage(page)
     
     // Dado que estou na homepage
@@ -136,7 +136,7 @@ test('Abrir menu "Trocar Filial"', async ({ page }) => {
     
 })
 
-test('Abrir menu "Sobre o Sistema"', async ({ page }) => {
+test('Abrir menu "Sobre o Sistema"', { tag: ['@home'] }, async ({ page }) => {
     const home = new HomePage(page)
     
     // Dado que estou na homepage
@@ -151,7 +151,7 @@ test('Abrir menu "Sobre o Sistema"', async ({ page }) => {
     
 })
 
-test('Abrir menu "Modo Escuro"', async ({ page }) => {
+test('Abrir menu "Modo Escuro"', { tag: ['@home'] }, async ({ page }) => {
     const home = new HomePage(page)
     
     // Dado que estou na homepage
@@ -167,7 +167,7 @@ test('Abrir menu "Modo Escuro"', async ({ page }) => {
     
 })
 
-test('Abrir menu "Sair"',{tag:['@Critical']}, async ({ page }) => {
+test('Abrir menu "Sair"', { tag: ['@Critical', '@home'] }, async ({ page }) => {
     const home = new HomePage(page)
     
     // Dado que estou na homepage
