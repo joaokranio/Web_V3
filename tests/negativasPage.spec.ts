@@ -36,14 +36,14 @@ test.describe('Validação Grid', () => {
 
         // Dado que fiz uma pesquisa usando o filtro da pesquisa geral
         await pesquisa.campoBusca.fill('amafagafo')
-        await expect(negativas.gridMessage).toHaveText(message)
+        await expect(negativas.grid.mensagemVazia).toHaveText(message)
 
 
         // Quando clico no botão "Limpar Filtro"
         await pesquisa.botaoLimparFiltro.click()
 
         // Então a pesquisa deverá ser resetada e a grid recarregada com todas as informações 
-        await expect(negativas.gridMessage).not.toBeVisible()
+        await expect(negativas.grid.mensagemVazia).not.toBeVisible()
 
     })
 
@@ -198,7 +198,7 @@ test.describe('Validação Inclusão', () => {
         await botoesGrid.botaoCancelar.click()
 
         // Então o registro da Negativa não deverá ser salvo
-        await expect(negativas.gridMessage).toHaveText(message)
+        await expect(negativas.grid.mensagemVazia).toHaveText(message)
 
     })
 

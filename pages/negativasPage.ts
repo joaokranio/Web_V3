@@ -4,15 +4,17 @@ import { graphqlRequest } from '../api/graphqlClient'
 import * as NegativaQueries from '../api/queries/negativa'
 import { NegativaCriada, NegativaPayload } from '../api/queries/negativa'
 import { buildNegativaPayload, MARCADOR_AUTOMACAO } from '../test-data/negativaFactory'
+import { Grid } from '../components/grid'
 
 export class Negativas {
     readonly page : Page
     // Genéricos
     readonly topo: Locator
 
-    // Grid
-    readonly gridMessage: Locator
-    
+    // Grid — mecânica genérica (ordenar, filtrar, ler valores, mensagem de
+    // vazio) fica em Grid; aqui só os locators específicos desta tela
+    readonly grid: Grid
+
     // Colunas da grid
     readonly colCodigo: Locator
     readonly colMotivo: Locator
@@ -40,7 +42,7 @@ export class Negativas {
         this.topo = page.locator('span.text-primary', { hasText: 'Negativas' })
 
         // Grid
-        this.gridMessage = page.locator('tr.p-datatable-empty-message')
+        this.grid = new Grid(page)
 
         // Colunas da grid
         this.colCodigo = page.getByText('Código', {exact: true})

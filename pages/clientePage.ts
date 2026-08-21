@@ -1,10 +1,15 @@
 import { Locator, Page } from '@playwright/test'
+import { Grid } from '../components/grid'
 
 export class ClientePage {
     readonly page: Page
 
     // Genéricos
     readonly topo: Locator
+
+    // Grid — mecânica genérica (ordenar, filtrar, ler valores, mensagem de
+    // vazio) fica em Grid; aqui só os locators específicos desta tela
+    readonly grid: Grid
 
     // Colunas grid
     readonly colCategoria: Locator
@@ -45,6 +50,9 @@ export class ClientePage {
 
         // Genéricos
         this.topo = page.locator('span.text-primary' , { hasText: 'Clientes' })
+
+        // Grid
+        this.grid = new Grid(page)
 
         // Colunas grid
         this.colCategoria = page.getByText('Categoria', {exact:true})

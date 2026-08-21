@@ -1,6 +1,7 @@
 import { test, expect } from '../fixtures/home.fixture'
 import { LoginPage } from '../pages/loginPage'
 import { HomePage } from '../pages/homePage'
+import { Negativas } from '../pages/negativasPage'
 
 test('Abrir menu "Clientes"', { tag: ['@home'] }, async ({ page }) => {
     const home = new HomePage(page)
@@ -29,11 +30,13 @@ test('Abrir menu "Pedidos de Venda"', { tag: ['@home'] }, async ({ page }) => {
     
     // Então devo ser redirecionado para a tela de Pedidos de Vendas
     await page.waitForURL('/#/comercial/pedidos')
+    await expect(page.locator('tr th').getByText('Código', {exact:true })).toBeVisible()
     
 })
 
 test('Abrir menu "Negativas"', { tag: ['@home'] }, async ({ page }) => {
     const home = new HomePage(page)
+    const negativas = new Negativas(page)
     
     // Dado que estou na homepage
     await page.goto('/#/indicadores')
@@ -44,6 +47,7 @@ test('Abrir menu "Negativas"', { tag: ['@home'] }, async ({ page }) => {
     
     // Então devo ser redirecionado para a tela de Negativas
     await page.waitForURL('/#/comercial/negativas')
+    await expect(negativas.colCodigo).toBeVisible()
     
 })
 
@@ -59,6 +63,7 @@ test('Abrir menu "Pedidos de Compra"', { tag: ['@home'] }, async ({ page }) => {
     
     // Então devo ser redirecionado para a tela de pedido de compra 
     await page.waitForURL('/#/compras/pedidos')
+    await expect(page.locator('tr th').getByText('Código', {exact:true })).toBeVisible()
     
 })
 
@@ -74,6 +79,7 @@ test('Abrir menu "Lista de Materiais"', { tag: ['@home'] }, async ({ page }) => 
     
     // Então devo ser redirecionado para a tela da Lista de materias
     await page.waitForURL('/#/material/materiais')
+    await expect(page.locator('tr th').getByText('Código', {exact:true })).toBeVisible()
     
 })
 
@@ -91,19 +97,16 @@ test('Abrir menu "Indicadores"', { tag: ['@home'] }, async ({ page }) => {
     
 })
 
-test('Abrir menu "Configurações"', { tag: ['@home'] }, async ({ page }) => {
-    const home = new HomePage(page)
-    
+test.fixme('Abrir menu "Configurações"', { tag: ['@home'] }, async ({ page }) => {
+
     // Dado que estou na homepage
-    await page.goto('/#/dashboard')
-    
+
     // Quando clico no menu "Configurações"
-    await home.menuSuperior.click()
-    await home.menuConfiguracoes.click()
-    
+
     // Então devo ser redirecionado para a tela de configurações do Sistema
-    // await page.waitForURL('/#/indicadores')
-    
+
+    // Página ainda não desenvolvida no sistema — cenário mantido apenas mapeado, para implementar quando a tela existir
+
 })
 
 test('Abrir menu "Diagnostico"', { tag: ['@home'] }, async ({ page }) => {
@@ -118,11 +121,15 @@ test('Abrir menu "Diagnostico"', { tag: ['@home'] }, async ({ page }) => {
     
     // Então devo ser redirecionado para a tela de diagnostico do Sistema
     await page.waitForURL('/#/diagnostico')
+    await expect(page.getByRole('columnheader',{name: 'Ação', exact: true})).toBeVisible()
+    await expect(page.getByRole('columnheader',{name: 'Status', exact: true})).toBeVisible()
+    await expect(page.getByRole('columnheader',{name: 'Detalhamento', exact: true})).toBeVisible()
     
 })
 
 test('Abrir menu "Trocar Filial"', { tag: ['@home'] }, async ({ page }) => {
     const home = new HomePage(page)
+    const login = new LoginPage(page)
     
     // Dado que estou na homepage
     await page.goto('/#/dashboard')
@@ -133,22 +140,20 @@ test('Abrir menu "Trocar Filial"', { tag: ['@home'] }, async ({ page }) => {
     
     // Então devo ser redirecionado para a tela para selecionar a filial
     await page.waitForURL('/#/trocar-filial')
+    await expect(login.selectFilial).toBeVisible()
     
 })
 
-test('Abrir menu "Sobre o Sistema"', { tag: ['@home'] }, async ({ page }) => {
-    const home = new HomePage(page)
-    
+test.fixme('Abrir menu "Sobre o Sistema"', { tag: ['@home'] }, async ({ page }) => {
+
     // Dado que estou na homepage
-    await page.goto('/#/dashboard')
-    
+
     // Quando clico no menu "Sobre o Sistema"
-    await home.menuSuperior.click()
-    await home.menuTrocarFilial.click()
-    
+
     // Então devo ser redirecionado para a tela com informações Sobre o Sistema
-    // await page.waitForURL('/#/troca-filial')
-    
+
+    // Página ainda não desenvolvida no sistema — cenário mantido apenas mapeado, para implementar quando a tela existir
+
 })
 
 test('Abrir menu "Modo Escuro"', { tag: ['@home'] }, async ({ page }) => {
@@ -162,13 +167,13 @@ test('Abrir menu "Modo Escuro"', { tag: ['@home'] }, async ({ page }) => {
     await home.menuDark.click()
     
     // Então a tela do sistema deverá assumir o modo escuro(dark)
-    // await page.waitForURL('/#/troca-filial')
     await page.waitForTimeout(2000)
     
 })
 
-test('Abrir menu "Sair"', { tag: ['@Critical', '@home'] }, async ({ page }) => {
+test('Abrir menu "Sair"', { tag: ['@critical', '@home'] }, async ({ page }) => {
     const home = new HomePage(page)
+    const login = new LoginPage(page)
     
     // Dado que estou na homepage
     await page.goto('/#/dashboard')
@@ -179,5 +184,6 @@ test('Abrir menu "Sair"', { tag: ['@Critical', '@home'] }, async ({ page }) => {
     
     // Então devo ser redirecionado para a tela de login do Sistema
     await page.waitForURL('/#/login')
+    await expect(login.btnEntrar).toBeVisible()
 
 })

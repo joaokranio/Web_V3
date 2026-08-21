@@ -44,19 +44,19 @@ export class HomePage {
         this.menuNegativas = page.getByTitle('Negativas')
         this.menuCompras = page.getByTitle('Compras')
         this.menuPedidosCompra = page.getByTitle('Pedidos de Compra')
-        this.menuMateriais = page.getByTitle('Materiais').nth(0)
+        this.menuMateriais = page.getByTitle('Materiais',{exact:true})
         this.menuListaMateriais = page.getByTitle('Lista de Materiais')
         this.menuIndicadores = page.getByTitle('Indicadores')
         
         // Menu superior
         this.menuSuperior = page.locator('button.app-logged-user')
         this.menuUser = page.locator('span.app-logged-user-name')
-        this.menuConfiguracoes = page.locator('a.p-menu-item-link',{hasText:'Configurações'})
-        this.menuDiagnostico = page.locator('a.p-menu-item-link',{hasText:'Diagnóstico'})
-        this.menuTrocarFilial = page.locator('a.p-menu-item-link',{hasText:'Trocar Filial'})
-        this.menuSobre = page.locator('a.p-menu-item-link',{hasText:'Sobre o Sistema'})
+        this.menuConfiguracoes = page.getByText('Configurações', {exact:true})
+        this.menuDiagnostico = page.getByText('Diagnóstico',{exact:true})
+        this.menuTrocarFilial = page.getByText('Trocar Filial', {exact:true})
+        this.menuSobre = page.getByText('Sobre o Sistema', {exact:true})
         this.menuDark = page.locator('input.p-toggleswitch-input')
-        this.menuSair = page.locator('a.p-menu-item-link',{hasText:'Sair'})
+        this.menuSair = page.getByText('Sair', {exact:true})
         
     }
 

@@ -51,7 +51,10 @@
 - **Quando** clico no menu "Configurações"
 - **Então** devo ser redirecionado para a tela de configurações do Sistema
 
-> TODO original: validação de URL comentada no teste (`await page.waitForURL('/#/indicadores')`), redirecionamento ainda não confirmado.
+> ⚠️ **Tela ainda não desenvolvida.** A página de Configurações ainda não
+> foi implementada no sistema — o cenário fica apenas **mapeado**
+> (`test.fixme`, sem interação alguma), mantido só como referência pra
+> implementar quando a tela existir.
 
 ### Abrir menu "Diagnóstico"
 
@@ -71,7 +74,10 @@
 - **Quando** clico no menu "Sobre o Sistema"
 - **Então** devo ser redirecionado para a tela com informações Sobre o Sistema
 
-> TODO original: teste ainda clica em "Trocar Filial" ao invés do menu "Sobre o Sistema" e a validação de URL está comentada.
+> ⚠️ **Tela ainda não desenvolvida.** Assim como Configurações, a página
+> "Sobre o Sistema" ainda não existe no sistema — o cenário fica apenas
+> **mapeado** (`test.fixme`, sem interação alguma), mantido só como
+> referência pra implementar quando a tela existir.
 
 ### Abrir menu "Modo Escuro"
 
@@ -80,7 +86,7 @@
 - **Então** a tela do sistema deverá assumir o modo escuro (dark)
 
 ### Abrir menu "Sair"
-`@Critical`
+`@critical`
 
 - **Dado que** estou na homepage
 - **Quando** clico no menu "Sair"

@@ -81,6 +81,13 @@ completo — os outros (`negativasPage.spec.ts`, `pedidoVenda.spec.ts`,
 Gherkin já estão lá, faltando implementar a interação de fato com a página.
 Isso foi proposital — documentamos o cenário primeiro, implementamos depois.
 
+`homePage.spec.ts` está quase todo implementado, com uma exceção: os cenários
+de **"Configurações"** e **"Sobre o Sistema"** estão marcados como
+`test.fixme` e reduzidos ao esqueleto (só os comentários Gherkin, sem
+interação nenhuma) — as telas correspondentes ainda não foram desenvolvidas
+no sistema, então não há o que testar ainda. Ficam mapeados só pra
+implementar quando as telas existirem.
+
 Os cenários de cada página também ficam espelhados em markdown dentro de
 `wiki/` (ex.: `wiki/loginpage.md`, `wiki/clientepage.md`), pensado pra servir
 de referência na migração do sistema de Vue 2 pra Vue 3, sem precisar ler
