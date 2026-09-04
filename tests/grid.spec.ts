@@ -100,27 +100,24 @@ test.describe('Validação comportamento colunas', () => {
 
     })
 
-    test('Validar a ordenação das colunas tipo Data crescente', { tag: ['@smoke', '@grid'] }, async ({ page }) => {
-        const cliente = new ClientePage(page)
-        const pesquisa = new Pesquisa(page)
-
+    test('Validar a ordenação das colunas tipo Data crescente', { tag: ['@smoke', '@grid'] }, async ({ page, clientePage, pesquisa }) => {
         const registro = 'WAL'
 
         // Dado que estou na telda de cadastro de clientes
         await page.goto('#/comercial/clientes')
-        await expect(cliente.topo).toBeVisible()
-        await expect(cliente.colFantasia).toBeVisible()
-        await cliente.grid.abrirFiltroColuna(cliente.colFantasia)
+        await expect(clientePage.topo).toBeVisible()
+        await expect(clientePage.colFantasia).toBeVisible()
+        await clientePage.grid.abrirFiltroColuna(clientePage.colFantasia)
         await pesquisa.selectoPesquisa.click()
         await pesquisa.strComecaCom.click()
         await pesquisa.inputPesquisaStr.fill(registro)
-        await cliente.grid.aguardarResposta('GetClientes', () => pesquisa.botaoPesquisarOK.click())
+        await clientePage.grid.aguardarResposta('GetClientes', () => pesquisa.botaoPesquisarOK.click())
 
         //Captura os valores da coluna "Dt. Cadastro" ao entrar na tela
-        const dtOriginal = await cliente.grid.valoresDaColuna(cliente.colDtCadastro)
+        const dtOriginal = await clientePage.grid.valoresDaColuna(clientePage.colDtCadastro)
 
         // Quando clico na coluna "Dt. Cadastro" 1x
-        await cliente.grid.aguardarResposta('GetClientes', () => cliente.colDtCadastro.click())
+        await clientePage.grid.aguardarResposta('GetClientes', () => clientePage.colDtCadastro.click())
 
         // Ordena os valores da coluna "Dt. Cadastro" em ordem crescente
         const dtOrdenados = [...dtOriginal].sort((a, b) => {
@@ -132,36 +129,33 @@ test.describe('Validação comportamento colunas', () => {
         })
 
         // Captura os valores da coluna "Dt. Cadastro" após clicar na coluna para ordenar
-        const dtDepois = await cliente.grid.valoresDaColuna(cliente.colDtCadastro)
+        const dtDepois = await clientePage.grid.valoresDaColuna(clientePage.colDtCadastro)
 
         // Então a grid deverá ser recarregada e ordenada de forma crescente por data
         expect(dtDepois).toEqual(dtOrdenados)
 
     })
 
-    test('Validar a ordenação das colunas tipo Data decrescente', { tag: ['@smoke', '@grid'] }, async ({ page }) => {
-        const cliente = new ClientePage(page)
-        const pesquisa = new Pesquisa(page)
-
+    test('Validar a ordenação das colunas tipo Data decrescente', { tag: ['@smoke', '@grid'] }, async ({ page, clientePage, pesquisa }) => {
         const registro = 'WAL'
 
         // Dado que estou na telda de cadastro de clientes
         await page.goto('#/comercial/clientes')
-        await expect(cliente.topo).toBeVisible()
-        await expect(cliente.colFantasia).toBeVisible()
-        await cliente.grid.abrirFiltroColuna(cliente.colFantasia)
+        await expect(clientePage.topo).toBeVisible()
+        await expect(clientePage.colFantasia).toBeVisible()
+        await clientePage.grid.abrirFiltroColuna(clientePage.colFantasia)
         await pesquisa.selectoPesquisa.click()
         await pesquisa.strComecaCom.click()
         await pesquisa.inputPesquisaStr.fill(registro)
-        await cliente.grid.aguardarResposta('GetClientes', () => pesquisa.botaoPesquisarOK.click())
+        await clientePage.grid.aguardarResposta('GetClientes', () => pesquisa.botaoPesquisarOK.click())
 
         //Captura os valores da coluna "Dt. Cadastro" ao entrar na tela
-        const dtOriginal = await cliente.grid.valoresDaColuna(cliente.colDtCadastro)
+        const dtOriginal = await clientePage.grid.valoresDaColuna(clientePage.colDtCadastro)
 
         // Quando clico na coluna "Dt. Cadastro" 2x — cada clique guardado
         // individualmente (ver comentário na ordenação numérica decrescente)
-        await cliente.grid.aguardarResposta('GetClientes', () => cliente.colDtCadastro.click())
-        await cliente.grid.aguardarResposta('GetClientes', () => cliente.colDtCadastro.click())
+        await clientePage.grid.aguardarResposta('GetClientes', () => clientePage.colDtCadastro.click())
+        await clientePage.grid.aguardarResposta('GetClientes', () => clientePage.colDtCadastro.click())
 
         // Ordena os valores da coluna "Dt. Cadastro" em ordem decrescente
         const dtOrdenados = [...dtOriginal].sort((b, a) => {
@@ -173,16 +167,15 @@ test.describe('Validação comportamento colunas', () => {
         })
 
         // Captura os valores da coluna "Dt. Cadastro" após clicar na coluna para ordenar
-        const dtDepois = await cliente.grid.valoresDaColuna(cliente.colDtCadastro)
+        const dtDepois = await clientePage.grid.valoresDaColuna(clientePage.colDtCadastro)
 
         // Então a grid deverá ser recarregada e ordenada de forma decrescente por data
         expect(dtOrdenados).toEqual(dtDepois)
 
     })
 
-    test('Validar o comportamento do botão "X" dentro do filtro da coluna', { tag: ['@smoke', '@grid'] }, async ({ page }) => {
+    test('Validar o comportamento do botão "X" dentro do filtro da coluna', { tag: ['@smoke', '@grid'] }, async ({ page, pesquisa }) => {
         const negativas = new Negativas(page)
-        const pesquisa = new Pesquisa(page)
         await page.goto('/#/comercial/negativas')
         await expect(negativas.topo).toBeVisible()
 
@@ -199,9 +192,8 @@ test.describe('Validação comportamento colunas', () => {
 
     })
 
-    test.fixme('BUG-614 Azure | Validar o comportamento do botão "+ Adicionar Regra" dentro do filtro da coluna', { tag: ['@smoke', '@grid'] }, async ({ page }) => {
+    test.fixme('BUG-614 Azure | Validar o comportamento do botão "+ Adicionar Regra" dentro do filtro da coluna', { tag: ['@smoke', '@grid'] }, async ({ page, pesquisa }) => {
         const negativas = new Negativas(page)
-        const pesquisa = new Pesquisa(page)
         await page.goto('/#/comercial/negativas')
         await expect(negativas.topo).toBeVisible()
 
@@ -218,9 +210,8 @@ test.describe('Validação comportamento colunas', () => {
 
     })
 
-    test.fixme('BUG-614 Azure | Validar o comportamento do botão "Remover Regra" dentro do filtro da coluna', { tag: ['@smoke', '@grid'] }, async ({ page }) => {
+    test.fixme('BUG-614 Azure | Validar o comportamento do botão "Remover Regra" dentro do filtro da coluna', { tag: ['@smoke', '@grid'] }, async ({ page, pesquisa }) => {
         const negativas = new Negativas(page)
-        const pesquisa = new Pesquisa(page)
         await page.goto('/#/comercial/negativas')
         await expect(negativas.topo).toBeVisible()
 
@@ -240,9 +231,8 @@ test.describe('Validação comportamento colunas', () => {
 
     })
 
-    test('Validar o funcionamento do filtro tipo "Numérico" usando o "É igual a"', { tag: ['@smoke', '@grid'] }, async ({ page }) => {
+    test('Validar o funcionamento do filtro tipo "Numérico" usando o "É igual a"', { tag: ['@smoke', '@grid'] }, async ({ page, pesquisa }) => {
         const negativas = new Negativas(page)
-        const pesquisa = new Pesquisa(page)
         await negativas.grid.aguardarResposta('GetNegativas', () => page.goto('/#/comercial/negativas'))
         await expect(negativas.topo).toBeVisible()
 
@@ -259,9 +249,8 @@ test.describe('Validação comportamento colunas', () => {
 
     })
 
-    test.fixme('BUG-615 Azure | Validar o funcionamento do filtro tipo "Numérico" usando o "Não é igual a"', { tag: ['@smoke', '@grid'] }, async ({ page }) => {
+    test.fixme('BUG-615 Azure | Validar o funcionamento do filtro tipo "Numérico" usando o "Não é igual a"', { tag: ['@smoke', '@grid'] }, async ({ page, pesquisa }) => {
         const negativas = new Negativas(page)
-        const pesquisa = new Pesquisa(page)
         await page.goto('/#/comercial/negativas')
         await expect(negativas.topo).toBeVisible()
 
@@ -285,9 +274,8 @@ test.describe('Validação comportamento colunas', () => {
 
     })
 
-    test('Validar o funcionamento do filtro tipo "Numérico" usando o "É menor que"', { tag: ['@smoke', '@grid'] }, async ({ page }) => {
+    test('Validar o funcionamento do filtro tipo "Numérico" usando o "É menor que"', { tag: ['@smoke', '@grid'] }, async ({ page, pesquisa }) => {
         const negativas = new Negativas(page)
-        const pesquisa = new Pesquisa(page)
         await page.goto('/#/comercial/negativas')
         await expect(negativas.topo).toBeVisible()
 
@@ -308,9 +296,8 @@ test.describe('Validação comportamento colunas', () => {
 
     })
 
-    test('Validar o funcionamento do filtro tipo "Numérico" usando o "É menor ou igual a"', { tag: ['@smoke', '@grid'] }, async ({ page }) => {
+    test('Validar o funcionamento do filtro tipo "Numérico" usando o "É menor ou igual a"', { tag: ['@smoke', '@grid'] }, async ({ page, pesquisa }) => {
         const negativas = new Negativas(page)
-        const pesquisa = new Pesquisa(page)
         await page.goto('/#/comercial/negativas')
         await expect(negativas.topo).toBeVisible()
 
@@ -331,9 +318,8 @@ test.describe('Validação comportamento colunas', () => {
 
     })
 
-    test('Validar o funcionamento do filtro tipo "Numérico" usando o "É maior que"', { tag: ['@smoke', '@grid'] }, async ({ page }) => {
+    test('Validar o funcionamento do filtro tipo "Numérico" usando o "É maior que"', { tag: ['@smoke', '@grid'] }, async ({ page, pesquisa }) => {
         const negativas = new Negativas(page)
-        const pesquisa = new Pesquisa(page)
         await page.goto('/#/comercial/negativas')
         await expect(negativas.topo).toBeVisible()
 
@@ -354,9 +340,8 @@ test.describe('Validação comportamento colunas', () => {
 
     })
 
-    test('Validar o funcionamento do filtro tipo "Numérico" usando o "É maior ou igual a"', { tag: ['@smoke', '@grid'] }, async ({ page }) => {
+    test('Validar o funcionamento do filtro tipo "Numérico" usando o "É maior ou igual a"', { tag: ['@smoke', '@grid'] }, async ({ page, pesquisa }) => {
         const negativas = new Negativas(page)
-        const pesquisa = new Pesquisa(page)
         await page.goto('/#/comercial/negativas')
         await expect(negativas.topo).toBeVisible()
 
@@ -377,9 +362,8 @@ test.describe('Validação comportamento colunas', () => {
 
     })
 
-    test('Validar o funcionamento do filtro tipo "String" usando o "É igual a"', { tag: ['@smoke', '@grid'] }, async ({ page }) => {
+    test('Validar o funcionamento do filtro tipo "String" usando o "É igual a"', { tag: ['@smoke', '@grid'] }, async ({ page, pesquisa }) => {
         const negativas = new Negativas(page)
-        const pesquisa = new Pesquisa(page)
         await page.goto('/#/comercial/negativas')
         await expect(negativas.topo).toBeVisible()
 
@@ -399,9 +383,8 @@ test.describe('Validação comportamento colunas', () => {
 
     })
 
-    test('Validar o funcionamento do filtro tipo "String" usando o "Começa com"', { tag: ['@smoke', '@grid'] }, async ({ page }) => {
+    test('Validar o funcionamento do filtro tipo "String" usando o "Começa com"', { tag: ['@smoke', '@grid'] }, async ({ page,pesquisa }) => {
         const negativas = new Negativas(page)
-        const pesquisa = new Pesquisa(page)
         await page.goto('/#/comercial/negativas')
         await expect(negativas.topo).toBeVisible()
 
@@ -424,9 +407,8 @@ test.describe('Validação comportamento colunas', () => {
 
     })
 
-    test('Validar o funcionamento do filtro tipo "String" usando o "Contem"', { tag: ['@smoke', '@grid'] }, async ({ page }) => {
+    test('Validar o funcionamento do filtro tipo "String" usando o "Contem"', { tag: ['@smoke', '@grid'] }, async ({ page, pesquisa }) => {
         const negativas = new Negativas(page)
-        const pesquisa = new Pesquisa(page)
         await page.goto('/#/comercial/negativas')
         await expect(negativas.topo).toBeVisible()
 
@@ -447,9 +429,8 @@ test.describe('Validação comportamento colunas', () => {
 
     })
 
-    test('Validar o funcionamento do filtro tipo "String" usando o "Não Contem"', { tag: ['@smoke', '@grid'] }, async ({ page }) => {
+    test('Validar o funcionamento do filtro tipo "String" usando o "Não Contem"', { tag: ['@smoke', '@grid'] }, async ({ page, pesquisa }) => {
         const negativas = new Negativas(page)
-        const pesquisa = new Pesquisa(page)
         await page.goto('/#/comercial/negativas')
         await expect(negativas.topo).toBeVisible()
 
@@ -470,9 +451,8 @@ test.describe('Validação comportamento colunas', () => {
 
     })
 
-    test('Validar o funcionamento do filtro tipo "String" usando o "Terminca com"', { tag: ['@smoke', '@grid'] }, async ({ page }) => {
+    test('Validar o funcionamento do filtro tipo "String" usando o "Terminca com"', { tag: ['@smoke', '@grid'] }, async ({ page, pesquisa }) => {
         const negativas = new Negativas(page)
-        const pesquisa = new Pesquisa(page)
         await page.goto('/#/comercial/negativas')
         await expect(negativas.topo).toBeVisible()
 
@@ -493,9 +473,8 @@ test.describe('Validação comportamento colunas', () => {
 
     })
 
-    test.fixme('BUG-616 Azure | Validar o funcionamento do filtro tipo "String" usando o "Não é igual a "', { tag: ['@smoke', '@grid'] }, async ({ page }) => {
+    test.fixme('BUG-616 Azure | Validar o funcionamento do filtro tipo "String" usando o "Não é igual a "', { tag: ['@smoke', '@grid'] }, async ({ page, pesquisa }) => {
         const negativas = new Negativas(page)
-        const pesquisa = new Pesquisa(page)
         await page.goto('/#/comercial/negativas')
         await expect(negativas.topo).toBeVisible()
 

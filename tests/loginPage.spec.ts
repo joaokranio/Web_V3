@@ -20,7 +20,6 @@ test('Deve permitir login com credenciais válidas', { tag: ['@critical', '@smok
     // Quando clico no botão "Entrar".
     await login.btnEntrar.click()
 
-
     // E selecionei a filial e clico em confirmar.
     await login.selecionarFilial()
     await login.btnConfirmar.click()

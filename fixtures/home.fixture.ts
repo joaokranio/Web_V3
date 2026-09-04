@@ -2,9 +2,15 @@ import { test as base, expect, type BrowserContext } from '@playwright/test'
 
 import { LoginPage } from '../pages/loginPage'
 import { HomePage } from '../pages/homePage'
+import { BotoesGrid } from '../components/botoesGrid'
+import { Toast } from '../components'
+import { Pesquisa } from '../components/pesquisa'
 
 type HomeFixtures = {
     homePage: HomePage
+    botoesGrid: BotoesGrid
+    toast: Toast
+    pesquisa: Pesquisa
 }
 
 type StorageState = Awaited<ReturnType<BrowserContext['storageState']>>
@@ -73,6 +79,18 @@ export const test = base.extend<HomeFixtures, WorkerFixtures>({
 
     homePage: async ({ page }, use) => {
         await use(new HomePage(page))
+    },
+
+    botoesGrid: async ({ page }, use) => {
+        await use(new BotoesGrid(page))
+    },
+
+    toast: async ({ page }, use) => {
+        await use(new Toast(page))
+    },
+
+    pesquisa: async ({page}, use) => {
+        await use (new Pesquisa(page))
     }
 })
 

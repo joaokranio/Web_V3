@@ -7,12 +7,14 @@ import { buildClientePayload } from '../test-data/clienteFactory'
 import { NegativaCriada } from '../api/queries/negativa'
 import { Negativas } from '../pages/negativasPage'
 import { negativaPayloads } from '../test-data/negativaFactory'
+import { ClientePage } from '../pages/clientePage'
 
 type ApiWorkerFixtures = {
     apiAuthHeaders: AuthHeaders
 }
 
 type ApiTestFixtures = {
+    clientePage: ClientePage
     clienteSeed: ClienteCriado
     negativaSeedPreset: keyof typeof negativaPayloads
     negativaSeed: NegativaCriada
@@ -22,7 +24,7 @@ type ApiTestFixtures = {
 // "authState" em home.fixture.ts: evita repetir login REST a cada teste e
 // evita corrida entre workers concorrentes.
 const apiTest = base.extend<ApiTestFixtures, ApiWorkerFixtures>({
-    apiAuthHeaders: [async ({}, use) => {
+    apiAuthHeaders: [async ({ }, use) => {
         // Fixture "request" do Playwright é test-scoped; para autenticar uma
         // única vez por worker criamos nosso próprio APIRequestContext via a
         // API estática "request" (mesma ideia do "authState" em
@@ -91,6 +93,10 @@ const apiTest = base.extend<ApiTestFixtures, ApiWorkerFixtures>({
         } catch (error) {
             console.warn(`Falha ao excluir negativa de teste (id: ${negativa.id}):`, error)
         }
+    },
+
+    clientePage: async ({ page }, use) => {
+        await use(new ClientePage(page))
     },
 })
 
